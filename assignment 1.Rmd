@@ -1,0 +1,78 @@
+---
+title: "assignment"
+author: '10500162'
+date: "2019/12/2"
+output: html_document
+---
+
+## I use read to load data.
+```{r}
+literature_data <- read_csv("C:/Users/guany/Desktop/r/literature_data.csv")
+
+```
+
+## I use read to load data.
+```{r}
+my_data_1_ <- read_csv("C:/Users/guany/Desktop/r/my_data(1).csv")
+
+```
+
+## I load tidyverse.
+```{r}
+library(tidyverse)
+```
+
+## I use the gather to change wide to long.
+```{r}
+data_long <- gather(my_data_1_, "condition", "rt", c("common_word", "rare_word"))
+
+```
+
+## to see the structure.
+```{r}
+str(data_long)
+```
+
+## draw a viloin plot, with bootstrap confidence.
+```{r}
+ggplot(data_long, aes(x = condition, y = rt,  
+  group = condition, fill = condition)) +  
+  geom_violin() +  
+  geom_jitter(alpha = .25, position = position_jitter(0.05)) +  
+  guides(colour = FALSE, fill = FALSE) + 
+  stat_summary(fun.data = "mean_cl_boot", colour = "black", size = 1)
+```
+
+## merge the two data set.
+```{r}
+data_all <- inner_join(data_long, literature_data, by = (c("participant"))) 
+
+```
+
+## to see the structure.
+```{r}
+str(data_all)
+```
+
+## draw a scatter plot.
+```{r}
+ggplot(data_all, aes(x = literature, y = rt, colour = condition)) +   
+  geom_jitter(width = 0.05, alpha = .5, size = 4) +   
+  labs(title = "RT against Literature",      
+       x = "literature",      
+       y = "rt")
+
+```
+
+## to load Hmisc.
+```{r}
+library(Hmisc)
+```
+
+## draw a scatter plot with linear regression line.
+```{r}
+ggplot(data=data_all, aes(x=literature,y=rt, color=condition)) + geom_point() + 
+  labs(x="literature", y="rt") + geom_smooth(method="lm")
+
+```
+
